@@ -48,5 +48,5 @@ phases:
       - AWS_ECR_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG-$CODEBUILD_BUILD_NUMBER
       - DATE=`date`
       - echo Build completed on $DATE
-      - sed -i.bak 's#AWS_ECR_URI#'"$AWS_ECR_URI"'#' ./eks-app-deploy.yaml
-      - kubectl apply -f ./eks-app-deploy.yaml
+      - sed -i.bak 's#AWS_ECR_URI#'"$AWS_ECR_URI"'#' ./99_simple-webapp_02_blue_dep.yaml
+      - kubectl apply -f ./99_simple-webapp_02_blue_dep.yaml
