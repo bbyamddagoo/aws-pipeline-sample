@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simple-webapp-green-v1
+  namespace: ns-tomcat-8529
+  annotations:
+    pod.kubernetes.io/lifetime: 30s
+  labels:
+    app: simple-webapp-green-v1
+    run: simple-webapp-green
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1 # Rolling Update 시 동시에 삭제할 수 있는 pod의 최대 개수 (default : 25%)
+      maxUnavailable: 0 # 동시에 생성될 수 있는 pod의 최대 개수 (default : 25%)
+  selector:
+    matchLabels:
+      app: simple-webapp-green-v1
+  template:
+    metadata:
+      labels:
+        app: simple-webapp-green-v1
+        run: simple-webapp-green
+    spec:
+      containers:
+      - name: simple-webapp-green-v1
+        # image: bbyamddagoo/simple-webapp:test-v3
+        image: 061203270663.dkr.ecr.ap-northeast-2.amazonaws.com/simple-webapp:latest
+        #command: ['sh','-c','sleep 100 && java -Xms128m -Xmx128m -Dobj_name=hbhan-spring -jar /server/deploy-root/hbhan-spring/hbhan-spring-0.0.1-SNAPSHOT.jar &']
+        env:
+        - name: APP_COLOR
+          value: green
+        ports:
+        - name: http
+          containerPort: 8080
+        #initialDelaySeconds + failureThreshold × periodSeconds = Container 기동 시간
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 5
+        livenessProbe:
+          tcpSocket:
+            port: 8080
+          initialDelaySeconds: 180
+          timeoutSeconds: 30
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
+        resources:
+          limits:
+            cpu: 100m
+            memory: 300Mi
+          requests:
+            cpu: 100m
+            memory: 300Mi
+        volumeMounts:
+        #- name: spring-test-vol-v1
+        #  mountPath: /server/deploy-root/hbhan-spring/
+        #  readOnly: false
+        - name: tz-config
+          mountPath: /etc/localtime
+      imagePullSecrets:
+      - name: 0612-ecr
+      volumes:
+      #- name : spring-test-vol-v1
+      #  hostPath:
+      #    path: /root/k8s_2nd/spring-test/
+      - name: tz-config
+        hostPath:
+           path: /usr/share/zoneinfo/Asia/Seoul
