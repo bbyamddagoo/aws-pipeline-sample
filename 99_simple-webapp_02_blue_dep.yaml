@@ -14,7 +14,7 @@ spec:
     type: RollingUpdate
     rollingUpdate:
       maxSurge: 1 # Rolling Update 시 동시에 삭제할 수 있는 pod의 최대 개수 (default : 25%)
-      maxUnavailable: 0 # 동시에 생성될 수 있는 pod의 최대 개수 (default : 25%)
+      maxUnavailable: 0 # 동시에 생성될 수 있는 pod의 최대 개수 (default : 25%) 
   selector:
     matchLabels:
       app: prd-simple-webapp-blue-v1
