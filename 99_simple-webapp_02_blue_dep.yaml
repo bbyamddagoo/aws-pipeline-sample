@@ -1,12 +1,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: simple-webapp-blue-v1
+  name: prd-simple-webapp-blue-v1
   namespace: ns-tomcat-8529
   annotations:
     pod.kubernetes.io/lifetime: 30s
   labels:
-    app: simple-webapp-blue-v1
+    app: prd-simple-webapp-blue-v1
     run: simple-webapp-blue
 spec:
   replicas: 2
@@ -17,15 +17,15 @@ spec:
       maxUnavailable: 0 # 동시에 생성될 수 있는 pod의 최대 개수 (default : 25%)
   selector:
     matchLabels:
-      app: simple-webapp-blue-v1
+      app: prd-simple-webapp-blue-v1
   template:
     metadata:
       labels:
-        app: simple-webapp-blue-v1
+        app: prd-simple-webapp-blue-v1
         run: simple-webapp-blue
     spec:
       containers:
-      - name: simple-webapp-blue-v1
+      - name: prd-simple-webapp-blue-v1
         # image: bbyamddagoo/simple-webapp:test-v3
         # image: 061203270663.dkr.ecr.ap-northeast-2.amazonaws.com/simple-webapp:latest
         image: AWS_ECR_URI
